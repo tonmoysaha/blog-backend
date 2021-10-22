@@ -1,4 +1,4 @@
-package com.square.health.controller;
+package com.square.health.controller.blogger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

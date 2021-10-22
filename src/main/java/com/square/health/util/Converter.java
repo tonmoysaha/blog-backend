@@ -2,8 +2,10 @@ package com.square.health.util;
 
 import com.square.health.dto.AdminDto;
 import com.square.health.dto.BloggerDto;
+import com.square.health.dto.PostDto;
 import com.square.health.model.Admin;
 import com.square.health.model.Blogger;
+import com.square.health.model.Post;
 
 public class Converter {
 
@@ -36,5 +38,18 @@ public class Converter {
         adminDto.setEmail(admin.getEmail());
         adminDto.setAdminName(admin.getUserName());
         return adminDto;
+    }
+
+    public static Post postDtoToPost(PostDto postDto) {
+        Post post = new Post();
+        post.setPostBody(postDto.getPostBody());
+        return post;
+    }
+
+    public static PostDto postToPostDto(Post post) {
+        PostDto postDto = new PostDto();
+        postDto.setPostBody(post.getPostBody());
+        postDto.setStatus(post.getStatus().name());
+        return postDto;
     }
 }

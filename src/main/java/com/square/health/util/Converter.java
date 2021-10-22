@@ -50,6 +50,7 @@ public class Converter {
         PostDto postDto = new PostDto();
         postDto.setPostBody(post.getPostBody());
         postDto.setStatus(post.getStatus().name());
+        postDto.setPostId(post.getId());
         return postDto;
     }
 }

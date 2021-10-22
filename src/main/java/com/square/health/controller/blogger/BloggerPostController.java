@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.square.health.dto.BloggerDto;
 import com.square.health.dto.PostDto;
+import com.square.health.model.Post;
 import com.square.health.service.BloggerService;
 import com.square.health.service.PostService;
 import com.square.health.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
@@ -33,6 +35,12 @@ public class BloggerPostController {
 
     @Autowired
     private Utility utility;
+
+    @GetMapping("/all")
+    public ResponseEntity<List<PostDto>> getAllActivePost(HttpServletRequest httpServletRequest) throws JsonProcessingException, JSONException {
+        List<PostDto> post = this.postService.getAllActivePost(httpServletRequest);
+        return  ResponseEntity.ok(post);
+    }
 
     @PostMapping("/create")
     public JsonNode createPost(HttpServletRequest httpServletRequest,

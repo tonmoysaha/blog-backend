@@ -11,6 +11,8 @@ import javax.validation.constraints.Pattern;
 
 public class PostDto {
 
+    Long postId;
+
     @NotBlank(message = "601")
     @Pattern(regexp = "^\\d+$", message = "Enter Valid id")
     String bloggerId;
@@ -44,5 +46,13 @@ public class PostDto {
 
     public void setBloggerId(String bloggerId) {
         this.bloggerId = bloggerId;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 }

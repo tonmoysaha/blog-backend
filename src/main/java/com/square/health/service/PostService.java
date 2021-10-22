@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface PostService {
     JSONObject createPost(HttpServletRequest httpServletRequest, PostDto requestBodyDto) throws JSONException;
@@ -15,4 +16,6 @@ public interface PostService {
     JSONObject approvePost(HttpServletRequest httpServletRequest, PostStatusDto postStatusDto) throws JSONException;
 
     JSONObject deletePostForBlogger(HttpServletRequest httpServletRequest, Long postId, Long bloggerId) throws JSONException;
+
+    List<PostDto> getAllActivePost(HttpServletRequest httpServletRequest);
 }

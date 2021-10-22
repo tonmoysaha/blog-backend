@@ -38,10 +38,20 @@ public class PostServiceImpl implements PostService {
         if (optionalBlogger.isPresent()) {
             Post post = Converter.postDtoToPost(requestBodyDto);
             post.setBlogger(optionalBlogger.get());
-            post.setStatus(StatusEnum.ACTIVE);
+            post.setStatus(StatusEnum.INACTIVE);
             postRepository.save(post);
             return utility.createResponse(HttpStatus.CREATED.value(), KeyWord.SUCCESS_CREATED, "Post Created");
         }
         return utility.createResponse(HttpStatus.FOUND.value(), KeyWord.SUCCESS_EXIST, "Post Created");
+    }
+
+    @Override
+    public JSONObject deletePost(HttpServletRequest httpServletRequest, Long postId) throws JSONException {
+        Optional<Post> optionalPost = this.postRepository.findById(postId);
+        if (optionalPost.isPresent()){
+            this.postRepository.delete(optionalPost.get());
+            return utility.createResponse(HttpStatus.NOT_FOUND.value(), KeyWord.SUCCESS_DELETED, "Deleted successful");
+        }
+        return utility.createResponse(HttpStatus.NOT_FOUND.value(), KeyWord.SUCCESS_FAILED, "Post Not Found");
     }
 }

@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -46,6 +43,13 @@ public class BloggerPostController {
             return objectMapper.readTree(missing_field.toString());
         }
         JSONObject post = this.postService.createPost(httpServletRequest, requestBodyDto);
+        return objectMapper.readTree(post.toString());
+    }
+
+    @DeleteMapping("/delete")
+    public JsonNode deletePost(HttpServletRequest httpServletRequest,
+                                @RequestParam Long postId) throws JsonProcessingException, JSONException {
+        JSONObject post = this.postService.deletePost(httpServletRequest, postId);
         return objectMapper.readTree(post.toString());
     }
 

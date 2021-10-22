@@ -8,4 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface PostService {
     JSONObject createPost(HttpServletRequest httpServletRequest, PostDto requestBodyDto) throws JSONException;
+
+    JSONObject deletePost(HttpServletRequest httpServletRequest, Long postId) throws JSONException;
 }

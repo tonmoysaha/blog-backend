@@ -7,4 +7,5 @@ public class KeyWord {
     public static String SUCCESS_APPROVE = "APPROVE";
     public static String SUCCESS_EXIST = "EXIST";
     public static String SUCCESS_CREATED = "CREATED";
+    public static String SUCCESS_DELETED = "DELETED";
 }

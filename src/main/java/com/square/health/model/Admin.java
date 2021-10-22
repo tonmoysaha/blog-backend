@@ -5,12 +5,14 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.UniqueConstraint;
 import java.util.List;
 
 @Entity
 public class Admin extends BaseEntity {
     private String userName;
     private String password;
+
     private String email;
 
     @ManyToMany

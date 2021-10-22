@@ -1,9 +1,12 @@
 package com.square.health.config;
 
 import com.square.health.service.impl.AdminUserDetailService;
+import com.square.health.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,7 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class AppConfiguration extends WebSecurityConfigurerAdapter {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class AdminConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AdminUserDetailService adminUserDetailService;
@@ -35,7 +39,7 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(adminUserDetailService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(adminUserDetailService).passwordEncoder(PasswordUtil.passwordEncoder());
     }
 
     @Override

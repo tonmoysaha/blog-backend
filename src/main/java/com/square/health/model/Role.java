@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class Role extends BaseEntity {
-    
+
     private String role;
 
     public String getRole() {

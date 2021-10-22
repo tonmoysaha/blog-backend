@@ -18,7 +18,7 @@ public class AdminUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Admin user = this.adminRepository.findByUserName(email);
+        Admin user = this.adminRepository.findByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("User doesn't exist!");
         }

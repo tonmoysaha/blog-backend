@@ -1,17 +1,25 @@
 package com.square.health.dto;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class CreateBloggerRequest {
+public class BloggerDto {
 
-    @NotNull(message = "bloggerPassword cannot be null")
+    @NotNull(message = "bloggerName cannot be null")
+    @NotEmpty(message = "bloggerName cannot be empty")
+    @NotBlank(message = "bloggerName cannot be blank")
     private String bloggerName;
+    @NotEmpty(message = "bloggerPassword cannot be empty")
     @NotNull(message = "bloggerPassword cannot be null")
+    @NotBlank(message = "bloggerPassword cannot be blank")
     private String bloggerPassword;
 
     @Email(message = "is not valid email address")
     private String email;
+
+    private String bloggerStatus;
 
     public String getBloggerName() {
         return bloggerName;
@@ -35,5 +43,13 @@ public class CreateBloggerRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getBloggerStatus() {
+        return bloggerStatus;
+    }
+
+    public void setBloggerStatus(String bloggerStatus) {
+        this.bloggerStatus = bloggerStatus;
     }
 }

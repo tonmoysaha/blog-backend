@@ -3,7 +3,7 @@ package com.square.health.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.square.health.dto.CreateBloggerRequest;
+import com.square.health.dto.BloggerDto;
 import com.square.health.service.BloggerService;
 import com.square.health.util.Utility;
 import org.json.JSONException;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,15 +34,14 @@ public class BloggerAuthController {
 
     @PostMapping("/disable")
     public JsonNode createBlogger(HttpServletRequest httpServletRequest,
-                                  @Valid @RequestBody CreateBloggerRequest requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {
+                                  @Valid @RequestBody BloggerDto requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {
         if (errors.hasFieldErrors()) {
-            List<String> collect = errors.getFieldErrors().stream().map(FieldError::toString).collect(Collectors.toList());
+            List<String> collect = errors.getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
             JSONObject missing_field = utility.createResponse(401, "Missing field", collect.toString());
             return objectMapper.readTree(missing_field.toString());
         }
-//        this.bloggerService.createBlogger(httpServletRequest, requestBodyDto);
-//        return objectMapper.readTree(jsonObject.toString());
-        return null;
+        JSONObject blogger = this.bloggerService.createBlogger(httpServletRequest, requestBodyDto);
+        return objectMapper.readTree(blogger.toString());
     }
 
 }

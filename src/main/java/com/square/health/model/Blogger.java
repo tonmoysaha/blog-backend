@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -61,5 +62,10 @@ public class Blogger extends BaseEntity {
 
     public void setStatus(StatusEnum status) {
         this.status = status;
+    }
+
+    public void grantRole(Role role) {
+        this.roles = new LinkedList<>();
+        this.roles.add(role);
     }
 }

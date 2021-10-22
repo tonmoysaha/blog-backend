@@ -48,8 +48,8 @@ public class BloggerPostController {
 
     @DeleteMapping("/delete")
     public JsonNode deletePost(HttpServletRequest httpServletRequest,
-                                @RequestParam Long postId) throws JsonProcessingException, JSONException {
-        JSONObject post = this.postService.deletePost(httpServletRequest, postId);
+                                @RequestParam("postId") Long postId, @RequestParam("bloggerId") Long bloggerId) throws JsonProcessingException, JSONException {
+        JSONObject post = this.postService.deletePostForBlogger(httpServletRequest, postId, bloggerId);
         return objectMapper.readTree(post.toString());
     }
 

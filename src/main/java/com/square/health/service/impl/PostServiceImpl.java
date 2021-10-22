@@ -1,6 +1,7 @@
 package com.square.health.service.impl;
 
 import com.square.health.dto.PostDto;
+import com.square.health.dto.PostStatusDto;
 import com.square.health.model.Blogger;
 import com.square.health.model.Post;
 import com.square.health.repositoy.BloggerRepository;
@@ -48,6 +49,28 @@ public class PostServiceImpl implements PostService {
     @Override
     public JSONObject deletePost(HttpServletRequest httpServletRequest, Long postId) throws JSONException {
         Optional<Post> optionalPost = this.postRepository.findById(postId);
+        if (optionalPost.isPresent()){
+            this.postRepository.delete(optionalPost.get());
+            return utility.createResponse(HttpStatus.NOT_FOUND.value(), KeyWord.SUCCESS_DELETED, "Deleted successful");
+        }
+        return utility.createResponse(HttpStatus.NOT_FOUND.value(), KeyWord.SUCCESS_FAILED, "Post Not Found");
+    }
+
+    @Override
+    public JSONObject approvePost(HttpServletRequest httpServletRequest, PostStatusDto postStatusDto) throws JSONException {
+        Optional<Post> optionalPost = this.postRepository.findById(postStatusDto.getPostId());
+        if (optionalPost.isPresent()){
+            Post post = optionalPost.get();
+            post.setStatus(StatusEnum.valueOf(postStatusDto.getPostStatus()));
+            this.postRepository.save(post);
+            return utility.createResponse(HttpStatus.CREATED.value(), KeyWord.SUCCESS_UPDATED, "Post Updated");
+        }
+        return utility.createResponse(HttpStatus.NOT_FOUND.value(), KeyWord.SUCCESS_FAILED, "Post Not Found");
+    }
+
+    @Override
+    public JSONObject deletePostForBlogger(HttpServletRequest httpServletRequest, Long postId, Long bloggerId) throws JSONException {
+        Optional<Post> optionalPost = this.postRepository.findByIdAndBloggerId(postId, bloggerId);
         if (optionalPost.isPresent()){
             this.postRepository.delete(optionalPost.get());
             return utility.createResponse(HttpStatus.NOT_FOUND.value(), KeyWord.SUCCESS_DELETED, "Deleted successful");

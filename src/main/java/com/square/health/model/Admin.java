@@ -6,6 +6,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.UniqueConstraint;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -49,5 +50,10 @@ public class Admin extends BaseEntity {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public void grantRole(Role role) {
+        this.roles = new LinkedList<>();
+        this.roles.add(role);
     }
 }

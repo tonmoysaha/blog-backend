@@ -1,9 +1,11 @@
-package com.square.health.controller;
+package com.square.health.controller.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.square.health.dto.AdminDto;
 import com.square.health.dto.AdminLoginDto;
+import com.square.health.dto.BloggerDto;
 import com.square.health.dto.BloggerLoginDto;
 import com.square.health.model.Admin;
 import com.square.health.service.AdminService;
@@ -17,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
@@ -54,5 +59,17 @@ public class AdminAuthController {
             }
         }
         return objectMapper.readTree(jsonObject.toString());
+    }
+
+    @PostMapping("/create")
+    public JsonNode createAdmin(HttpServletRequest httpServletRequest,
+                                @Valid @RequestBody AdminDto requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {
+        if (errors.hasFieldErrors()) {
+            List<String> collect = errors.getFieldErrors().stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
+            JSONObject missing_field = utility.createResponse(401, "Missing field", collect.toString());
+            return objectMapper.readTree(missing_field.toString());
+        }
+        JSONObject admin = this.adminService.createAdmin(httpServletRequest, requestBodyDto);
+        return objectMapper.readTree(admin.toString());
     }
 }

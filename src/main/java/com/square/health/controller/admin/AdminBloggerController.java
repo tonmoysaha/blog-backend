@@ -1,9 +1,10 @@
-package com.square.health.controller;
+package com.square.health.controller.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.square.health.dto.BloggerDto;
+import com.square.health.dto.BloggerStatusDto;
 import com.square.health.service.BloggerService;
 import com.square.health.util.Utility;
 import org.json.JSONException;
@@ -32,9 +33,9 @@ public class AdminBloggerController {
     private Utility utility;
 
     @PostMapping("/approve/blogger")
-    public JsonNode createBlogger(HttpServletRequest httpServletRequest,
-                                  @RequestParam("bloggerId") Long bloggerId) throws JsonProcessingException, JSONException {
-        JSONObject blogger = this.bloggerService.approveBlogger(httpServletRequest, bloggerId);
+    public JsonNode updateBloggerStatus(HttpServletRequest httpServletRequest,
+                                  @RequestBody BloggerStatusDto bloggerStatusDto) throws JsonProcessingException, JSONException {
+        JSONObject blogger = this.bloggerService.approveBlogger(httpServletRequest, bloggerStatusDto);
         return objectMapper.readTree(blogger.toString());
     }
 }

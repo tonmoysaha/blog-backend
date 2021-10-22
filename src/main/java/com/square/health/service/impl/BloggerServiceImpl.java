@@ -1,6 +1,7 @@
 package com.square.health.service.impl;
 
 import com.square.health.dto.BloggerDto;
+import com.square.health.dto.BloggerStatusDto;
 import com.square.health.model.Blogger;
 import com.square.health.repositoy.BloggerRepository;
 import com.square.health.service.BloggerService;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -52,11 +54,11 @@ public class BloggerServiceImpl implements BloggerService {
     }
 
     @Override
-    public JSONObject approveBlogger(HttpServletRequest httpServletRequest, Long bloggerId) throws JSONException {
-        Optional<Blogger> optionalBlogger = this.bloggerRepository.findById(bloggerId);
+    public JSONObject approveBlogger(HttpServletRequest httpServletRequest, @RequestBody BloggerStatusDto bloggerStatusDto) throws JSONException {
+        Optional<Blogger> optionalBlogger = this.bloggerRepository.findById(bloggerStatusDto.getBloggerId());
         if (optionalBlogger.isPresent()){
             Blogger blogger = optionalBlogger.get();
-            blogger.setStatus(StatusEnum.ACTIVE);
+            blogger.setStatus(StatusEnum.valueOf(bloggerStatusDto.getBloggerStatus()));
             this.bloggerRepository.save(blogger);
             return utility.createResponse(HttpStatus.CREATED.value(), KeyWord.SUCCESS_APPROVE, "Approve Blogger");
         }

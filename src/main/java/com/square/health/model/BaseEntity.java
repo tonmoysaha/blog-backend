@@ -1,5 +1,6 @@
 package com.square.health.model;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -16,7 +17,7 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime created;
 
     @UpdateTimestamp

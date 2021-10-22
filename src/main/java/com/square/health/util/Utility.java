@@ -1,4 +1,4 @@
 package com.square.health.util;
 
-public class A {
+public class Utility {
 }

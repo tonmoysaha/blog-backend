@@ -5,19 +5,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.square.health.dto.AdminDto;
 import com.square.health.dto.AdminLoginDto;
-import com.square.health.dto.BloggerDto;
-import com.square.health.dto.BloggerLoginDto;
-import com.square.health.model.Admin;
+import com.square.health.jwt.JwtTokenUtil;
 import com.square.health.service.AdminService;
-import com.square.health.util.KeyWord;
+import com.square.health.service.impl.AdminUserDetailService;
 import com.square.health.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,12 +28,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminAuthController {
+
+    @Autowired
+    private AdminUserDetailService userDetailsService;
 
     @Autowired
     private AdminService adminService;
@@ -46,19 +53,23 @@ public class AdminAuthController {
     @Autowired
     private Utility utility;
 
-    @PostMapping("/signIn")
-    public JsonNode signIn(HttpServletRequest httpServletRequest,
-                           @Valid @RequestBody AdminLoginDto requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-        JSONObject jsonObject = new JSONObject();
-        Admin admin = this.adminService.getAdmin(requestBodyDto.getAdminEmail());
-        if (admin != null) {
-            Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestBodyDto.getAdminEmail(), requestBodyDto.getAdminPassword()));
-            if (authenticate.isAuthenticated()) {
-                jsonObject = utility.createResponse(HttpStatus.ACCEPTED.value(), KeyWord.SUCCESS_MESSAGE, "Log in Successfully");
-            }
+    @PostMapping("/signIn")
+    public ResponseEntity<?> signIn(HttpServletRequest httpServletRequest,
+                                         @Valid @RequestBody AdminLoginDto requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {
+
+        final UserDetails userDetails = userDetailsService
+                .loadUserByUsername(requestBodyDto.getAdminEmail());
+        String token = null;
+        if (userDetails != null) {
+            authenticate(requestBodyDto.getAdminEmail(), requestBodyDto.getAdminPassword());
+            token = jwtTokenUtil.generateToken(userDetails);
         }
-        return objectMapper.readTree(jsonObject.toString());
+        Map<Object, Object> model = new HashMap<>();
+        model.put("token", token);
+        return ResponseEntity.ok(model);
     }
 
     @PostMapping("/create")
@@ -71,5 +82,18 @@ public class AdminAuthController {
         }
         JSONObject admin = this.adminService.createAdmin(httpServletRequest, requestBodyDto);
         return objectMapper.readTree(admin.toString());
+    }
+
+    private void authenticate(String username, String password) {
+        Objects.requireNonNull(username);
+        Objects.requireNonNull(password);
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new BadCredentialsException("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("INVALID_CREDENTIALS", e);
+        }
     }
 }

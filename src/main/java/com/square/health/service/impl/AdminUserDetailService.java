@@ -22,6 +22,6 @@ public class AdminUserDetailService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User doesn't exist!");
         }
-        return User.builder().username(user.getUserName()).password(user.getPassword()).authorities(RoleEnum.ROLE_ADMIN.name()).build();
+        return User.builder().username(user.getEmail()).password(user.getPassword()).authorities(RoleEnum.ROLE_ADMIN.name()).build();
     }
 }

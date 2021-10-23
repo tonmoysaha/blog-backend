@@ -1,9 +1,12 @@
 package com.square.health.jwt;
+import com.square.health.model.Admin;
+import com.square.health.repositoy.AdminRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -22,6 +25,9 @@ public class JwtTokenUtil {
 
     @Value("${jwt.token.expiration.in.seconds}")
     private Long expiration;
+
+    @Autowired
+    private AdminRepository adminRepository;
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -49,14 +55,15 @@ public class JwtTokenUtil {
         return expiration.before(clock.now());
     }
 
-    private Boolean ignoreTokenExpiration(String token) {
-        // here you specify tokens, for that the expiration is ignored
-        return false;
-    }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateTokenForAdmin(UserDetails userDetails) {
+        Admin admin = this.adminRepository.findByEmail(userDetails.getUsername());
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", userDetails.getAuthorities());
+        claims.put("email", admin.getEmail());
+        claims.put("adminId", admin.getId());
+        claims.put("adminName", admin.getUserName());
+        claims.put("create", admin.getCreated().toString());
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -67,20 +74,6 @@ public class JwtTokenUtil {
                 .setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token) {
-        return (!isTokenExpired(token) || ignoreTokenExpiration(token));
-    }
-
-    public String refreshToken(String token) {
-        final Date createdDate = clock.now();
-        final Date expirationDate = calculateExpirationDate(createdDate);
-
-        final Claims claims = getAllClaimsFromToken(token);
-        claims.setIssuedAt(createdDate);
-        claims.setExpiration(expirationDate);
-
-        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
-    }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         String userName = this.getUserName(token);

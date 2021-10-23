@@ -54,7 +54,6 @@ public class AdminConfiguration extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable().csrf().disable().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().anyRequest().permitAll();
 //                .antMatchers("/person/**", "/book/**").authenticated().antMatchers("/users").denyAll();
-
 //        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

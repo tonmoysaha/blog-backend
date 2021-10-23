@@ -65,7 +65,7 @@ public class AdminAuthController {
         String token = null;
         if (userDetails != null) {
             authenticate(requestBodyDto.getAdminEmail(), requestBodyDto.getAdminPassword());
-            token = jwtTokenUtil.generateToken(userDetails);
+            token = jwtTokenUtil.generateTokenForAdmin(userDetails);
         }
         Map<Object, Object> model = new HashMap<>();
         model.put("token", token);

@@ -2,9 +2,11 @@ package com.square.health.util;
 
 import com.square.health.dto.AdminDto;
 import com.square.health.dto.BloggerDto;
+import com.square.health.dto.CommentDto;
 import com.square.health.dto.PostDto;
 import com.square.health.model.Admin;
 import com.square.health.model.Blogger;
+import com.square.health.model.Comment;
 import com.square.health.model.Post;
 
 public class Converter {
@@ -52,5 +54,20 @@ public class Converter {
         postDto.setStatus(post.getStatus().name());
         postDto.setPostId(post.getId());
         return postDto;
+    }
+
+    public static Comment commentDtoToComment(CommentDto commentDto) {
+        Comment comment = new Comment();
+        comment.setComment(commentDto.getComment());
+        return comment;
+    }
+
+    public static CommentDto commentToCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setBloggerName(comment.getBlogger().getUserName());
+        commentDto.setStatus(comment.getStatus().name());
+        commentDto.setComment(comment.getComment());
+        commentDto.setCommentId(String.valueOf(comment.getId()));
+        return commentDto;
     }
 }

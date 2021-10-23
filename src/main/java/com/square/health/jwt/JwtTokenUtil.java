@@ -1,6 +1,8 @@
 package com.square.health.jwt;
 import com.square.health.model.Admin;
+import com.square.health.model.Blogger;
 import com.square.health.repositoy.AdminRepository;
+import com.square.health.repositoy.BloggerRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Component
@@ -28,6 +31,9 @@ public class JwtTokenUtil {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private BloggerRepository bloggerRepository;
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -64,6 +70,20 @@ public class JwtTokenUtil {
         claims.put("adminId", admin.getId());
         claims.put("adminName", admin.getUserName());
         claims.put("create", admin.getCreated().toString());
+        return doGenerateToken(claims, userDetails.getUsername());
+    }
+
+
+    public String generateTokenForBlogger(UserDetails userDetails) {
+        Optional<Blogger> optionalBlogger = this.bloggerRepository.findByEmail(userDetails.getUsername());
+        Blogger blogger = optionalBlogger.get();
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", userDetails.getAuthorities());
+        claims.put("email", blogger.getEmail());
+        claims.put("bloggerId", blogger.getId());
+        claims.put("bloggerName", blogger.getUserName());
+        claims.put("status", blogger.getStatus());
+        claims.put("create", blogger.getCreated().toString());
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

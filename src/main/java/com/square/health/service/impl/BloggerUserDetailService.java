@@ -27,7 +27,7 @@ public class BloggerUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("Blogger doesn't exist!");
         }
         Blogger blogger = optionalBlogger.get();
-        return User.builder().username(blogger.getUserName()).password(blogger.getPassword()).authorities(RoleEnum.ROLE_BLOGGER.name()).build();
+        return User.builder().username(blogger.getEmail()).password(blogger.getPassword()).authorities(RoleEnum.ROLE_BLOGGER.name()).build();
     }
 
 }

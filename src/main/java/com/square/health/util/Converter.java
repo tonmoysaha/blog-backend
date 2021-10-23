@@ -53,6 +53,7 @@ public class Converter {
         postDto.setPostBody(post.getPostBody());
         postDto.setStatus(post.getStatus().name());
         postDto.setPostId(post.getId());
+        postDto.setBloggerId(String.valueOf(post.getBlogger().getId()));
         return postDto;
     }
 

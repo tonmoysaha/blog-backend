@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/post")
 public class AdminPostController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class AdminPostController {
     @Autowired
     private Utility utility;
 
-    @PostMapping("/approve/post")
+    @PostMapping("/approve")
     public JsonNode updateBloggerStatus(HttpServletRequest httpServletRequest,
                                         @RequestBody PostStatusDto postStatusDto) throws JsonProcessingException, JSONException {
         JSONObject blogger = this.postService.approvePost(httpServletRequest, postStatusDto);

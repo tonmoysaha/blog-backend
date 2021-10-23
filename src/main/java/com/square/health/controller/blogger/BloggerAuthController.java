@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.square.health.dto.BloggerDto;
 import com.square.health.dto.BloggerLoginDto;
+import com.square.health.jwt.JwtTokenUtil;
 import com.square.health.model.Blogger;
 import com.square.health.service.BloggerService;
 import com.square.health.service.impl.BloggerUserDetailService;
@@ -15,9 +16,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,6 +43,9 @@ public class BloggerAuthController {
     private BloggerService bloggerService;
 
     @Autowired
+    private BloggerUserDetailService bloggerUserDetailService;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -46,6 +53,9 @@ public class BloggerAuthController {
 
     @Autowired
     private Utility utility;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/registration")
     public JsonNode createBlogger(HttpServletRequest httpServletRequest,
@@ -69,11 +79,29 @@ public class BloggerAuthController {
              jsonObject = utility.createResponse(HttpStatus.UNAUTHORIZED.value(), "Failed", "Blogger inactive");
             return objectMapper.readTree(jsonObject.toString());
         }
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestBodyDto.getBloggerEmail(), requestBodyDto.getBloggerPassword()));
-        if (authenticate.isAuthenticated()) {
-            jsonObject = utility.createResponse(HttpStatus.ACCEPTED.value(), KeyWord.SUCCESS_MESSAGE, "Log in Successfully");
+        final UserDetails userDetails = bloggerUserDetailService
+                .loadUserByUsername(requestBodyDto.getBloggerEmail());
+        String token = null;
+        if (userDetails != null) {
+            authenticate(requestBodyDto.getBloggerEmail(), requestBodyDto.getBloggerPassword());
+            token = jwtTokenUtil.generateTokenForBlogger(userDetails);
         }
-        return objectMapper.readTree(jsonObject.toString());
+        JSONObject model = new JSONObject();
+        model.put("token", token);
+        return objectMapper.readTree(model.toString());
+    }
+
+    private void authenticate(String username, String password) {
+        Objects.requireNonNull(username);
+        Objects.requireNonNull(password);
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new BadCredentialsException("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("INVALID_CREDENTIALS", e);
+        }
     }
 
 }

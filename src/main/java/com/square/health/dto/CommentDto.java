@@ -7,15 +7,13 @@ import javax.validation.constraints.Pattern;
 
 public class CommentDto {
 
-    @NotBlank(message = "commentId cannot be blank")
-    @Pattern(regexp = "^\\d+$", message = "Enter Valid id")
     String commentId;
 
     @NotBlank(message = "postId cannot be blank")
     @Pattern(regexp = "^\\d+$", message = "Enter Valid id")
     String postId;
 
-    @NotBlank(message = "601")
+    @NotBlank(message = "bloggerId cannot be blank")
     @Pattern(regexp = "^\\d+$", message = "Enter Valid id")
     String bloggerId;
 

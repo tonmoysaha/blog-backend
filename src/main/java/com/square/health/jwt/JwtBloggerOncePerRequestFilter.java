@@ -1,6 +1,6 @@
 package com.square.health.jwt;
 
-import com.square.health.service.impl.AdminUserDetailService;
+import com.square.health.service.impl.BloggerUserDetailService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class JwtBloggerOncePerRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    private AdminUserDetailService adminUserDetailService;
+    private BloggerUserDetailService bloggerUserDetailService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -52,7 +52,7 @@ public class JwtBloggerOncePerRequestFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = this.adminUserDetailService.loadUserByUsername(username);
+            UserDetails userDetails = this.bloggerUserDetailService.loadUserByUsername(username);
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

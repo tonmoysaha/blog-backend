@@ -6,10 +6,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 public interface AdminService {
     Admin getAdmin(String bloggerEmail);
 
     JSONObject createAdmin(HttpServletRequest httpServletRequest, AdminDto requestBodyDto) throws JSONException;
+
+    List<AdminDto> getAllAdmin(HttpServletRequest httpServletRequest);
 }

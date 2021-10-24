@@ -3,6 +3,7 @@ package com.square.health.service.impl;
 import com.square.health.dto.AdminDto;
 import com.square.health.model.Admin;
 import com.square.health.model.Blogger;
+import com.square.health.model.Post;
 import com.square.health.repositoy.AdminRepository;
 import com.square.health.service.AdminService;
 import com.square.health.service.RoleService;
@@ -19,7 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -49,5 +53,13 @@ public class AdminServiceImpl implements AdminService {
             return utility.createResponse(HttpStatus.CREATED.value(), KeyWord.SUCCESS_CREATED, "Creation Complete");
         }
         return utility.createResponse(HttpStatus.FOUND.value(), KeyWord.SUCCESS_EXIST, "Registration Failed");
+    }
+
+    @Override
+    public List<AdminDto> getAllAdmin(HttpServletRequest httpServletRequest) {
+        List<Admin> adminList = this.adminRepository.findAll();
+        if (!adminList.isEmpty())
+            return adminList.stream().map(admin -> Converter.adminToAdminDto(admin)).collect(Collectors.toList());
+        return Arrays.asList();
     }
 }

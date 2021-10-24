@@ -46,8 +46,6 @@ public class JwtBloggerOncePerRequestFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 logger.warn("JWT_TOKEN_EXPIRED", e);
             }
-        } else {
-            logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

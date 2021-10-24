@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.square.health.dto.AdminDto;
 import com.square.health.dto.AdminLoginDto;
+import com.square.health.dto.CommentDto;
 import com.square.health.jwt.JwtTokenUtil;
 import com.square.health.service.AdminService;
 import com.square.health.service.impl.AdminUserDetailService;
@@ -21,10 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -33,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/admin")
 public class AdminAuthController {
@@ -56,6 +54,7 @@ public class AdminAuthController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @CrossOrigin
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(HttpServletRequest httpServletRequest,
                                          @Valid @RequestBody AdminLoginDto requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {
@@ -71,6 +70,7 @@ public class AdminAuthController {
         model.put("token", token);
         return ResponseEntity.ok(model);
     }
+
 
     @PostMapping("/create")
     public JsonNode createAdmin(HttpServletRequest httpServletRequest,
@@ -95,5 +95,11 @@ public class AdminAuthController {
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("INVALID_CREDENTIALS", e);
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AdminDto>> getAllAdmin(HttpServletRequest httpServletRequest) throws JsonProcessingException, JSONException {
+        List<AdminDto> post = this.adminService.getAllAdmin(httpServletRequest);
+        return  ResponseEntity.ok(post);
     }
 }

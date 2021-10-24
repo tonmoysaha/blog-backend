@@ -1,7 +1,9 @@
 package com.square.health.service.impl;
 
+import com.square.health.dto.AdminDto;
 import com.square.health.dto.BloggerDto;
 import com.square.health.dto.BloggerStatusDto;
+import com.square.health.model.Admin;
 import com.square.health.model.Blogger;
 import com.square.health.repositoy.BloggerRepository;
 import com.square.health.service.BloggerService;
@@ -20,7 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BloggerServiceImpl implements BloggerService {
@@ -63,5 +68,13 @@ public class BloggerServiceImpl implements BloggerService {
             return utility.createResponse(HttpStatus.CREATED.value(), KeyWord.SUCCESS_APPROVE, "Approve Blogger");
         }
         return utility.createResponse(HttpStatus.NOT_FOUND.value(), KeyWord.SUCCESS_FAILED, "Approve Blogger");
+    }
+
+    @Override
+    public List<BloggerDto> getAllBlogger(HttpServletRequest httpServletRequest) {
+        List<Blogger> bloggerList = this.bloggerRepository.findAll();
+        if (!bloggerList.isEmpty())
+            return bloggerList.stream().map(blogger -> Converter.bloggerToBloggerDto(blogger)).collect(Collectors.toList());
+        return Arrays.asList();
     }
 }

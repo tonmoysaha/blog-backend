@@ -18,4 +18,6 @@ public interface PostService {
     JSONObject deletePostForBlogger(HttpServletRequest httpServletRequest, Long postId, Long bloggerId) throws JSONException;
 
     List<PostDto> getAllActivePost(HttpServletRequest httpServletRequest);
+
+    List<PostDto> getAllPost(HttpServletRequest httpServletRequest);
 }

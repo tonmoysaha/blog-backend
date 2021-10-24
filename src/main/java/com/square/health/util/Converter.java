@@ -22,6 +22,7 @@ public class Converter {
     public static BloggerDto bloggerToBloggerDto(Blogger blogger) {
         BloggerDto bloggerDto = new BloggerDto();
         bloggerDto.setEmail(blogger.getEmail());
+        bloggerDto.setBloggerId(String.valueOf(blogger.getId()));
         bloggerDto.setBloggerName(blogger.getUserName());
         bloggerDto.setBloggerStatus(blogger.getStatus().name());
         return bloggerDto;
@@ -50,10 +51,12 @@ public class Converter {
 
     public static PostDto postToPostDto(Post post) {
         PostDto postDto = new PostDto();
+        Blogger blogger = post.getBlogger();
         postDto.setPostBody(post.getPostBody());
         postDto.setStatus(post.getStatus().name());
-        postDto.setPostId(post.getId());
-        postDto.setBloggerId(String.valueOf(post.getBlogger().getId()));
+        postDto.setPostId(String.valueOf(post.getId()));
+        postDto.setBloggerId(String.valueOf(blogger.getId()));
+        postDto.setBloggerName(blogger.getUserName());
         return postDto;
     }
 

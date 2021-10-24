@@ -34,7 +34,7 @@ public class JwtBloggerOncePerRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String requestTokenHeader = request.getHeader(this.tokenHeader);
-
+        logger.info(requestTokenHeader);
         String username = null;
         String jwtToken = null;
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {

@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 
 public class BloggerDto {
 
+    String bloggerId;
+
     @NotNull(message = "bloggerName cannot be null")
     @NotEmpty(message = "bloggerName cannot be empty")
     @NotBlank(message = "bloggerName cannot be blank")
@@ -51,5 +53,13 @@ public class BloggerDto {
 
     public void setBloggerStatus(String bloggerStatus) {
         this.bloggerStatus = bloggerStatus;
+    }
+
+    public String getBloggerId() {
+        return bloggerId;
+    }
+
+    public void setBloggerId(String bloggerId) {
+        this.bloggerId = bloggerId;
     }
 }

@@ -11,7 +11,12 @@ import javax.validation.constraints.Pattern;
 
 public class PostDto {
 
-    Long postId;
+    String postId;
+
+    @NotNull(message = "bloggerName cannot be null")
+    @NotEmpty(message = "bloggerName cannot be empty")
+    @NotBlank(message = "bloggerName cannot be blank")
+    private String bloggerName;
 
     @NotBlank(message = "601")
     @Pattern(regexp = "^\\d+$", message = "Enter Valid id")
@@ -48,11 +53,19 @@ public class PostDto {
         this.bloggerId = bloggerId;
     }
 
-    public Long getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(Long postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
+    }
+
+    public String getBloggerName() {
+        return bloggerName;
+    }
+
+    public void setBloggerName(String bloggerName) {
+        this.bloggerName = bloggerName;
     }
 }

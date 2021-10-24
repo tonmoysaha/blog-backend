@@ -88,4 +88,12 @@ public class PostServiceImpl implements PostService {
             return postList.stream().map(post -> Converter.postToPostDto(post)).collect(Collectors.toList());
         return Arrays.asList();
     }
+
+    @Override
+    public List<PostDto> getAllPost(HttpServletRequest httpServletRequest) {
+        List<Post> postList = this.postRepository.findAll();
+        if (!postList.isEmpty())
+            return postList.stream().map(post -> Converter.postToPostDto(post)).collect(Collectors.toList());
+        return Arrays.asList();
+    }
 }

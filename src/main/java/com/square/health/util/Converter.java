@@ -1,13 +1,7 @@
 package com.square.health.util;
 
-import com.square.health.dto.AdminDto;
-import com.square.health.dto.BloggerDto;
-import com.square.health.dto.CommentDto;
-import com.square.health.dto.PostDto;
-import com.square.health.model.Admin;
-import com.square.health.model.Blogger;
-import com.square.health.model.Comment;
-import com.square.health.model.Post;
+import com.square.health.dto.*;
+import com.square.health.model.*;
 
 public class Converter {
 

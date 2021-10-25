@@ -20,4 +20,6 @@ public interface PostService {
     List<PostDto> getAllActivePost(HttpServletRequest httpServletRequest);
 
     List<PostDto> getAllPost(HttpServletRequest httpServletRequest);
+
+    List<PostDto> myAllActivePost(HttpServletRequest httpServletRequest, Long bloggerId);
 }

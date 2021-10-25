@@ -12,4 +12,6 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     Optional<Post> findByIdAndBloggerId(Long postId, Long bloggerId);
 
     List<Post> findByStatus(StatusEnum active);
+
+    List<Post> findByStatusAndBloggerId(StatusEnum active, Long bloggerId);
 }

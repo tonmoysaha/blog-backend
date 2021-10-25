@@ -2,10 +2,8 @@ package com.square.health.model;
 
 import com.square.health.util.enumutil.StatusEnum;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Post extends BaseEntity {
@@ -17,6 +15,9 @@ public class Post extends BaseEntity {
 
     @ManyToOne
     private Blogger blogger;
+
+//    @OneToMany
+//    List<Post> posts;
 
     public String getPostBody() {
         return postBody;
@@ -41,4 +42,12 @@ public class Post extends BaseEntity {
     public void setBlogger(Blogger blogger) {
         this.blogger = blogger;
     }
+
+//    public List<Post> getPosts() {
+//        return posts;
+//    }
+//
+//    public void setPosts(List<Post> posts) {
+//        this.posts = posts;
+//    }
 }

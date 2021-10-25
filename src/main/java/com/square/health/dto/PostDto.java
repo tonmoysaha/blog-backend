@@ -12,10 +12,7 @@ import javax.validation.constraints.Pattern;
 public class PostDto {
 
     String postId;
-
-    @NotNull(message = "bloggerName cannot be null")
-    @NotEmpty(message = "bloggerName cannot be empty")
-    @NotBlank(message = "bloggerName cannot be blank")
+    
     private String bloggerName;
 
     @NotBlank(message = "601")

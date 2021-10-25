@@ -42,6 +42,12 @@ public class BloggerPostController {
         return  ResponseEntity.ok(post);
     }
 
+    @GetMapping("/my/all")
+    public ResponseEntity<List<PostDto>> myAllActivePost(HttpServletRequest httpServletRequest, @RequestParam("bloggerId") Long bloggerId) throws JsonProcessingException, JSONException {
+        List<PostDto> post = this.postService.myAllActivePost(httpServletRequest, bloggerId);
+        return  ResponseEntity.ok(post);
+    }
+
     @PostMapping("/create")
     public JsonNode createPost(HttpServletRequest httpServletRequest,
                                   @Valid @RequestBody PostDto requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {

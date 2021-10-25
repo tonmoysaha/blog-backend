@@ -2,6 +2,8 @@ package com.square.health.util;
 
 import com.square.health.dto.*;
 import com.square.health.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Converter {
 
@@ -46,11 +48,13 @@ public class Converter {
     public static PostDto postToPostDto(Post post) {
         PostDto postDto = new PostDto();
         Blogger blogger = post.getBlogger();
+        postDto.setPostId(String.valueOf(post.getId()));
         postDto.setPostBody(post.getPostBody());
         postDto.setStatus(post.getStatus().name());
         postDto.setPostId(String.valueOf(post.getId()));
         postDto.setBloggerId(String.valueOf(blogger.getId()));
         postDto.setBloggerName(blogger.getUserName());
+//        postDto.setTotalLikes(post.getLikePosts().size());
         return postDto;
     }
 

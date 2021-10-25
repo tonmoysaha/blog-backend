@@ -5,6 +5,7 @@ import com.square.health.dto.PostStatusDto;
 import com.square.health.model.Blogger;
 import com.square.health.model.Post;
 import com.square.health.repositoy.BloggerRepository;
+import com.square.health.repositoy.LikeRepository;
 import com.square.health.repositoy.PostRepository;
 import com.square.health.repositoy.RoleRepository;
 import com.square.health.service.PostService;
@@ -32,6 +33,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private BloggerRepository bloggerRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
 
     @Autowired
     Utility utility;
@@ -85,7 +89,12 @@ public class PostServiceImpl implements PostService {
     public List<PostDto> getAllActivePost(HttpServletRequest httpServletRequest) {
         List<Post> postList = this.postRepository.findByStatus(StatusEnum.ACTIVE);
         if (!postList.isEmpty())
-            return postList.stream().map(post -> Converter.postToPostDto(post)).collect(Collectors.toList());
+            return postList.stream().map(post -> {
+                PostDto postDto = Converter.postToPostDto(post);
+                long l = this.likeRepository.countByPostId(Long.valueOf(postDto.getPostId()));
+                postDto.setTotalLikes((int) l);
+                return postDto;
+            }).collect(Collectors.toList());
         return Arrays.asList();
     }
 

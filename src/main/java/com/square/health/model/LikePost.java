@@ -7,7 +7,6 @@ import javax.persistence.ManyToOne;
 public class LikePost extends BaseEntity{
 
     boolean likePost;
-    boolean disLikePost;
 
     @ManyToOne
     private Post post;
@@ -21,14 +20,6 @@ public class LikePost extends BaseEntity{
 
     public void setLikePost(boolean likePost) {
         this.likePost = likePost;
-    }
-
-    public boolean isDisLikePost() {
-        return disLikePost;
-    }
-
-    public void setDisLikePost(boolean disLikePost) {
-        this.disLikePost = disLikePost;
     }
 
     public Post getPost() {

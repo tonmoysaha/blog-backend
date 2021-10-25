@@ -26,6 +26,8 @@ public class PostDto {
 
     private String status;
 
+    int totalLikes;
+
     public String getPostBody() {
         return postBody;
     }
@@ -64,5 +66,13 @@ public class PostDto {
 
     public void setBloggerName(String bloggerName) {
         this.bloggerName = bloggerName;
+    }
+
+    public int getTotalLikes() {
+        return totalLikes;
+    }
+
+    public void setTotalLikes(int totalLikes) {
+        this.totalLikes = totalLikes;
     }
 }

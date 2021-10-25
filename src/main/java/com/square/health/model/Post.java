@@ -16,8 +16,8 @@ public class Post extends BaseEntity {
     @ManyToOne
     private Blogger blogger;
 
-//    @OneToMany
-//    List<Post> posts;
+    @OneToMany(mappedBy = "post")
+    List<LikePost> likePosts;
 
     public String getPostBody() {
         return postBody;
@@ -43,11 +43,11 @@ public class Post extends BaseEntity {
         this.blogger = blogger;
     }
 
-//    public List<Post> getPosts() {
-//        return posts;
-//    }
-//
-//    public void setPosts(List<Post> posts) {
-//        this.posts = posts;
-//    }
+    public List<LikePost> getLikePosts() {
+        return likePosts;
+    }
+
+    public void setLikePosts(List<LikePost> likePosts) {
+        this.likePosts = likePosts;
+    }
 }

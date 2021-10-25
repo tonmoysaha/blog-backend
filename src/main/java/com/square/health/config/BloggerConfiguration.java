@@ -33,7 +33,7 @@ public class BloggerConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable().csrf().disable().sessionManagement()
+        http.cors().and().csrf().disable().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers("/blogger/**").permitAll();
 //                .antMatchers("/person/**", "/book/**").authenticated().antMatchers("/users").denyAll();
 

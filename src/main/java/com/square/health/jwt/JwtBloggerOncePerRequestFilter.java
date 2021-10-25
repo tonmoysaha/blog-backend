@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
-
-    @Autowired
-    private AdminUserDetailService adminUserDetailService;
+public class JwtBloggerOncePerRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private BloggerUserDetailService bloggerUserDetailService;
@@ -40,14 +37,7 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
         HttpServletRequest request1 = (HttpServletRequest) request;
         HttpServletResponse response1 = (HttpServletResponse) response;
 
-//        response1.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-//        response1.setHeader("Access-Control-Allow-Credentials", "true");
-//        response1.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-//        response1.setHeader("Access-Control-Max-Age", "3600");
-//        response1.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
-
         final String requestTokenHeader = request.getHeader(this.tokenHeader);
-//        final String userType = request.getHeader("User_Type");
 
 
         String username = null;
@@ -66,11 +56,7 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = null;
-//            if (userType.equals("Admin")) {
-                userDetails = this.adminUserDetailService.loadUserByUsername(username);
-//            }else
-//                userDetails = this.bloggerUserDetailService.loadUserByUsername(username);
+            UserDetails userDetails = userDetails = this.bloggerUserDetailService.loadUserByUsername(username);
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

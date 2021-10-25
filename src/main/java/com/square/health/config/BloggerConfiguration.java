@@ -27,14 +27,14 @@ public class BloggerConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity webSecurity) throws Exception {
         webSecurity.ignoring().antMatchers(HttpMethod.POST, "/blogger/SignIn").and().ignoring()
-                .antMatchers("/h2-console/**");// Should not be done in Production!
+                .antMatchers("/blogger/**");// Should not be done in Production!
 
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable().csrf().disable().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().anyRequest().permitAll();
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers("/blogger/**").permitAll();
 //                .antMatchers("/person/**", "/book/**").authenticated().antMatchers("/users").denyAll();
 
 //        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

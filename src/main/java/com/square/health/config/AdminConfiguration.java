@@ -1,5 +1,7 @@
 package com.square.health.config;
 
+import com.square.health.jwt.JwtAdminOncePerRequestFilter;
+import com.square.health.jwt.JwtUnAuthorizedResponseAuthenticationEntryPoint;
 import com.square.health.service.impl.AdminUserDetailService;
 import com.square.health.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -30,6 +35,13 @@ public class AdminConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AdminUserDetailService adminUserDetailService;
+
+    @Autowired
+    private JwtAdminOncePerRequestFilter jwtAdminOncePerRequestFilter;
+
+    @Autowired
+    private JwtUnAuthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -50,29 +62,30 @@ public class AdminConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity webSecurity) throws Exception {
-        webSecurity.ignoring().antMatchers(HttpMethod.POST, "/auth/adminSignIn").and().ignoring()
-                .antMatchers("/h2-console/**");// Should not be done in Production!
+        webSecurity.ignoring().antMatchers(HttpMethod.POST, "/admin/signIn").and()
+        .ignoring().antMatchers(HttpMethod.POST, "/blogger/signIn").and()
+                .ignoring().antMatchers("/h2-console/**");
 
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable().csrf().disable().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().anyRequest().permitAll();
-//                .antMatchers("/person/**", "/book/**").authenticated().antMatchers("/users").denyAll();
-//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.cors().and().csrf().disable().exceptionHandling()
+                .authenticationEntryPoint(jwtUnAuthorizedResponseAuthenticationEntryPoint).and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests().antMatchers("/admin/**").hasAuthority("ROLE_ADMIN").anyRequest().authenticated();
+        http.addFilterBefore(jwtAdminOncePerRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
-    public FilterRegistrationBean corsFilter() {
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.addAllowedHeader(CorsConfiguration.ALL);
+        configuration.addAllowedMethod(CorsConfiguration.ALL);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin(CorsConfiguration.ALL);
-        config.addAllowedHeader(CorsConfiguration.ALL);
-        config.addAllowedMethod(CorsConfiguration.ALL);
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(0);
-        return bean;
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

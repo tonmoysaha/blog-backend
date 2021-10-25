@@ -12,6 +12,8 @@ import com.square.health.service.impl.AdminUserDetailService;
 import com.square.health.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,10 +33,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/admin")
 public class AdminAuthController {
+
+    private  static Logger logger = LoggerFactory.getLogger(AdminAuthController.class);
 
     @Autowired
     private AdminUserDetailService userDetailsService;
@@ -72,6 +76,7 @@ public class AdminAuthController {
     }
 
 
+    @CrossOrigin
     @PostMapping("/create")
     public JsonNode createAdmin(HttpServletRequest httpServletRequest,
                                 @Valid @RequestBody AdminDto requestBodyDto, Errors errors) throws JsonProcessingException, JSONException {
@@ -97,6 +102,7 @@ public class AdminAuthController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/all")
     public ResponseEntity<List<AdminDto>> getAllAdmin(HttpServletRequest httpServletRequest) throws JsonProcessingException, JSONException {
         List<AdminDto> post = this.adminService.getAllAdmin(httpServletRequest);

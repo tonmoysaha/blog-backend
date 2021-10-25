@@ -1,6 +1,7 @@
 package com.square.health.jwt;
 
 import com.square.health.service.impl.AdminUserDetailService;
+import com.square.health.service.impl.BloggerUserDetailService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,9 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
     private AdminUserDetailService adminUserDetailService;
 
     @Autowired
+    private BloggerUserDetailService bloggerUserDetailService;
+
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Value("${jwt.http.request.header}")
@@ -33,7 +37,19 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        HttpServletRequest request1 = (HttpServletRequest) request;
+        HttpServletResponse response1 = (HttpServletResponse) response;
+
+        response1.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+//        response1.setHeader("Access-Control-Allow-Credentials", "true");
+        response1.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response1.setHeader("Access-Control-Max-Age", "3600");
+        response1.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
+
         final String requestTokenHeader = request.getHeader(this.tokenHeader);
+        final String userType = request.getHeader("User_Type");
+        logger.info(this.tokenHeader);
+        logger.info(requestTokenHeader);
 
         String username = null;
         String jwtToken = null;
@@ -47,12 +63,15 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
                 logger.warn("JWT_TOKEN_EXPIRED", e);
             }
         } else {
-            logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
+//            logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            UserDetails userDetails = this.adminUserDetailService.loadUserByUsername(username);
+            UserDetails userDetails = null;
+//            if (userType.equals("Admin")) {
+                userDetails = this.adminUserDetailService.loadUserByUsername(username);
+//            }else
+//                userDetails = this.bloggerUserDetailService.loadUserByUsername(username);
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

@@ -40,16 +40,14 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
         HttpServletRequest request1 = (HttpServletRequest) request;
         HttpServletResponse response1 = (HttpServletResponse) response;
 
-        response1.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+//        response1.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 //        response1.setHeader("Access-Control-Allow-Credentials", "true");
-        response1.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-        response1.setHeader("Access-Control-Max-Age", "3600");
-        response1.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
+//        response1.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+//        response1.setHeader("Access-Control-Max-Age", "3600");
+//        response1.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
 
         final String requestTokenHeader = request.getHeader(this.tokenHeader);
         final String userType = request.getHeader("User_Type");
-        logger.info(this.tokenHeader);
-        logger.info(requestTokenHeader);
 
         String username = null;
         String jwtToken = null;

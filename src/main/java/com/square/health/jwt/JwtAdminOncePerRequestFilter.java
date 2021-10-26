@@ -5,6 +5,7 @@ import com.square.health.service.impl.BloggerUserDetailService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@Order(1)
 public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -48,11 +50,12 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
 
         final String requestTokenHeader = request.getHeader(this.tokenHeader);
         final String userType = request.getHeader("User_Type");
+        logger.info(requestTokenHeader);
 
 
         String username = null;
         String jwtToken = null;
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ") && userType.equals("ADMIN")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
@@ -67,10 +70,11 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = null;
-//            if (userType.equals("Admin")) {
+            if (userType.equals("ADMIN")) {
                 userDetails = this.adminUserDetailService.loadUserByUsername(username);
-//            }else
-//                userDetails = this.bloggerUserDetailService.loadUserByUsername(username);
+            }else {
+                userDetails = this.bloggerUserDetailService.loadUserByUsername(username);
+            }
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

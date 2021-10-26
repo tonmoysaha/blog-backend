@@ -70,7 +70,7 @@ public class JwtTokenUtil {
         claims.put("adminId", admin.getId());
         claims.put("adminName", admin.getUserName());
         claims.put("create", admin.getCreated().toString());
-        claims.put("UserType", "ADMIN");
+        claims.put("AdminUserType", "ADMIN");
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -85,7 +85,7 @@ public class JwtTokenUtil {
         claims.put("bloggerName", blogger.getUserName());
         claims.put("status", blogger.getStatus());
         claims.put("create", blogger.getCreated().toString());
-        claims.put("UserType", "BLOGGER");
+        claims.put("BloggerUserType", "BLOGGER");
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

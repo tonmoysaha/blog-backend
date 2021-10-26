@@ -61,6 +61,7 @@ public class AdminConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurity) throws Exception {
         webSecurity.ignoring().antMatchers(HttpMethod.POST, "/admin/signIn").and()
         .ignoring().antMatchers(HttpMethod.POST, "/blogger/signIn").and()
+        .ignoring().antMatchers(HttpMethod.POST, "/blogger/registration").and()
                 .ignoring().antMatchers("/h2-console/**");
 
     }

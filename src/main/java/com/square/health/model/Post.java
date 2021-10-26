@@ -1,6 +1,7 @@
 package com.square.health.model;
 
 import com.square.health.util.enumutil.StatusEnum;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 public class Post extends BaseEntity {
 
+    @Column(length = 1000)
     private String postBody;
 
     @Enumerated(EnumType.STRING)

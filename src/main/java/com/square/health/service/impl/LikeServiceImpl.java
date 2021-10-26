@@ -8,9 +8,12 @@ import com.square.health.repositoy.BloggerRepository;
 import com.square.health.repositoy.LikeRepository;
 import com.square.health.repositoy.PostRepository;
 import com.square.health.service.LikeService;
+import com.square.health.util.KeyWord;
+import com.square.health.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,18 +31,28 @@ public class LikeServiceImpl implements LikeService {
     @Autowired
     private LikeRepository likeRepository;
 
+    @Autowired
+    Utility utility;
+
     @Override
-    public JSONObject createLike(HttpServletRequest httpServletRequest, LikeDto likeDto) {
+    public JSONObject createLike(HttpServletRequest httpServletRequest, LikeDto likeDto) throws JSONException {
         Optional<Blogger> optionalBlogger = this.bloggerRepository.findById(Long.valueOf(likeDto.getBloggerId()));
         Optional<Post> optionalPost = this.postRepository.findById(Long.valueOf(likeDto.getPostId()));
+        Optional<LikePost> likeRepositoryByBloggerId = this.likeRepository.findByBloggerId(Long.valueOf(likeDto.getBloggerId()));
         if (optionalBlogger.isPresent() && optionalPost.isPresent()){
-            LikePost likePost = new LikePost();
-            likePost.setBlogger(optionalBlogger.get());
-            likePost.setPost(optionalPost.get());
-            likePost.setLikePost(likeDto.isLikePost());
-            this.likeRepository.save(likePost);
+            if ((likeRepositoryByBloggerId.isPresent())){
+                likeRepositoryByBloggerId.get().setLikePost(likeDto.isLikePost());
+                this.likeRepository.save(likeRepositoryByBloggerId.get());
+            }else {
+                LikePost likePost = new LikePost();
+                likePost.setBlogger(optionalBlogger.get());
+                likePost.setPost(optionalPost.get());
+                likePost.setLikePost(likeDto.isLikePost());
+                this.likeRepository.save(likePost);
+            }
+            return utility.createResponse(HttpStatus.CREATED.value(), KeyWord.SUCCESS_CREATED, "Like");
         }
-        return new JSONObject();
+        return utility.createResponse(HttpStatus.FOUND.value(), KeyWord.SUCCESS_EXIST, "Like Created");
     }
 
     @Override

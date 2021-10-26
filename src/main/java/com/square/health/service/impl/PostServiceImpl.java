@@ -91,7 +91,7 @@ public class PostServiceImpl implements PostService {
         if (!postList.isEmpty())
             return postList.stream().map(post -> {
                 PostDto postDto = Converter.postToPostDto(post);
-                long l = this.likeRepository.countByPostId(Long.valueOf(postDto.getPostId()));
+                long l = this.likeRepository.countByPostIdAndLikePostTrue(Long.valueOf(postDto.getPostId()));
                 postDto.setTotalLikes((int) l);
                 return postDto;
             }).collect(Collectors.toList());

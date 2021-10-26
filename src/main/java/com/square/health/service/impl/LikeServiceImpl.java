@@ -38,7 +38,7 @@ public class LikeServiceImpl implements LikeService {
     public JSONObject createLike(HttpServletRequest httpServletRequest, LikeDto likeDto) throws JSONException {
         Optional<Blogger> optionalBlogger = this.bloggerRepository.findById(Long.valueOf(likeDto.getBloggerId()));
         Optional<Post> optionalPost = this.postRepository.findById(Long.valueOf(likeDto.getPostId()));
-        Optional<LikePost> likeRepositoryByBloggerId = this.likeRepository.findByBloggerId(Long.valueOf(likeDto.getBloggerId()));
+        Optional<LikePost> likeRepositoryByBloggerId = this.likeRepository.findByBloggerIdAndPostId(Long.valueOf(likeDto.getBloggerId()), Long.valueOf(likeDto.getPostId()));
         if (optionalBlogger.isPresent() && optionalPost.isPresent()){
             if ((likeRepositoryByBloggerId.isPresent())){
                 likeRepositoryByBloggerId.get().setLikePost(likeDto.isLikePost());
@@ -58,7 +58,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public JSONObject getAllLikeOfPost(HttpServletRequest httpServletRequest, Long postId) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        long l = this.likeRepository.countByPostId(postId);
+        long l = this.likeRepository.countByPostIdAndLikePostTrue(postId);
         jsonObject.put("likes", l);
         return jsonObject;
     }

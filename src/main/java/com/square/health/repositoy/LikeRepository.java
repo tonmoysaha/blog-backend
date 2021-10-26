@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<LikePost,Long> {
 
-    Optional<LikePost> findByBloggerId(Long valueOf);
-
     long countByPostId(Long postId);
 
     long countByPostIdAndLikePostTrue(Long valueOf);
+
+    Optional<LikePost> findByBloggerIdAndPostId(Long valueOf, Long valueOf1);
 }

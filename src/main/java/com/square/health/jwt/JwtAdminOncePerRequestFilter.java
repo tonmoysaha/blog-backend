@@ -47,12 +47,12 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
 //        response1.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
 
         final String requestTokenHeader = request.getHeader(this.tokenHeader);
-//        final String userType = request.getHeader("User_Type");
+        final String userType = request.getHeader("User_Type");
 
 
         String username = null;
         String jwtToken = null;
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ") && userType.equals("ADMIN")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);

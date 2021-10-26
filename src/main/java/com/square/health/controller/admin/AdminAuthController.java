@@ -38,8 +38,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin")
 public class AdminAuthController {
 
-    private  static Logger logger = LoggerFactory.getLogger(AdminAuthController.class);
-
     @Autowired
     private AdminUserDetailService userDetailsService;
 

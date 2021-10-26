@@ -34,15 +34,14 @@ public class JwtBloggerOncePerRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        HttpServletRequest request1 = (HttpServletRequest) request;
-        HttpServletResponse response1 = (HttpServletResponse) response;
-
         final String requestTokenHeader = request.getHeader(this.tokenHeader);
+        final String userType = request.getHeader("User_Type");
+
 
 
         String username = null;
         String jwtToken = null;
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ") && userType.equals("BLOGGER")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);

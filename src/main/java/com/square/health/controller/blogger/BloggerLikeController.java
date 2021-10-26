@@ -11,10 +11,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -46,4 +43,12 @@ public class BloggerLikeController {
         JSONObject post = this.likeService.createLike(httpServletRequest, likeDto);
         return objectMapper.readTree(post.toString());
     }
+
+    @GetMapping("/get")
+    public JsonNode getAllLikeOfPost(HttpServletRequest httpServletRequest,
+                                @RequestParam("postId") Long postId) throws JsonProcessingException, JSONException {
+        JSONObject post = this.likeService.getAllLikeOfPost(httpServletRequest, postId);
+        return objectMapper.readTree(post.toString());
+    }
+
 }

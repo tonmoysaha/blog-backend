@@ -8,6 +8,7 @@ import com.square.health.repositoy.BloggerRepository;
 import com.square.health.repositoy.LikeRepository;
 import com.square.health.repositoy.PostRepository;
 import com.square.health.service.LikeService;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,13 @@ public class LikeServiceImpl implements LikeService {
             this.likeRepository.save(likePost);
         }
         return new JSONObject();
+    }
+
+    @Override
+    public JSONObject getAllLikeOfPost(HttpServletRequest httpServletRequest, Long postId) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        long l = this.likeRepository.countByPostId(postId);
+        jsonObject.put("likes", l);
+        return jsonObject;
     }
 }

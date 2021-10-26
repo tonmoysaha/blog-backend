@@ -10,4 +10,6 @@ public interface LikeService {
     JSONObject createLike(HttpServletRequest httpServletRequest, LikeDto likeDto) throws JSONException;
 
     JSONObject getAllLikeOfPost(HttpServletRequest httpServletRequest, Long postId) throws JSONException;
+
+    JSONObject isPostLikedByBlogger(HttpServletRequest httpServletRequest, Long postId, Long bloggerId) throws JSONException;
 }

@@ -62,4 +62,15 @@ public class LikeServiceImpl implements LikeService {
         jsonObject.put("likes", l);
         return jsonObject;
     }
+
+    @Override
+    public JSONObject isPostLikedByBlogger(HttpServletRequest httpServletRequest, Long postId, Long bloggerId) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        Optional<LikePost> likeRepositoryByBloggerId = this.likeRepository.findByBloggerIdAndPostIdAndLikePostTrue(bloggerId, postId);
+        if (likeRepositoryByBloggerId.isPresent())
+            jsonObject.put("liked", true);
+        else
+            jsonObject.put("liked", false);
+        return jsonObject;
+    }
 }

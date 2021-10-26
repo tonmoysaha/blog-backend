@@ -51,4 +51,11 @@ public class BloggerLikeController {
         return objectMapper.readTree(post.toString());
     }
 
+    @GetMapping("/liked")
+    public JsonNode isPostLikedByBlogger(HttpServletRequest httpServletRequest,
+                                     @RequestParam("postId") Long postId , @RequestParam("bloggerId") Long bloggerId) throws JsonProcessingException, JSONException {
+        JSONObject post = this.likeService.isPostLikedByBlogger(httpServletRequest, postId, bloggerId);
+        return objectMapper.readTree(post.toString());
+    }
+
 }

@@ -39,9 +39,8 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        HttpServletRequest request1 = (HttpServletRequest) request;
-        HttpServletResponse response1 = (HttpServletResponse) response;
-
+//        HttpServletRequest request1 = (HttpServletRequest) request;
+//        HttpServletResponse response1 = (HttpServletResponse) response;
 //        response1.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 //        response1.setHeader("Access-Control-Allow-Credentials", "true");
 //        response1.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
@@ -65,7 +64,7 @@ public class JwtAdminOncePerRequestFilter extends OncePerRequestFilter {
                 logger.warn("JWT_TOKEN_EXPIRED", e);
             }
         } else {
-//            logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
+            logger.warn("JWT_TOKEN_DOES_NOT_START_WITH_BEARER_STRING");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

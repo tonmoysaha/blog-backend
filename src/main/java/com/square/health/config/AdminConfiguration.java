@@ -63,7 +63,10 @@ public class AdminConfiguration extends WebSecurityConfigurerAdapter {
         .ignoring().antMatchers(HttpMethod.POST, "/blogger/signIn").and()
         .ignoring().antMatchers(HttpMethod.POST, "/blogger/registration").and()
                 .ignoring().antMatchers("/h2-console/**")
-                .and().ignoring().antMatchers(HttpMethod.GET, "/", "/**");
+                .and().ignoring().antMatchers(
+                "/","/assets/**","/favicon.ico", "/styles.49b426734c7f45c5b264.css",
+                "/vendor.b10ca42ef9d90ad0d465.js", "/polyfills.f782e0cdb7e1242a13e4.js",
+                "/main.4a9597b6dca1cacc3e28.js", "/runtime.d6c52737d4587c65265f.js");
     }
 
     @Override

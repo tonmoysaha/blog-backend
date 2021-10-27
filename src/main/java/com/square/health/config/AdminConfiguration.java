@@ -62,8 +62,8 @@ public class AdminConfiguration extends WebSecurityConfigurerAdapter {
         webSecurity.ignoring().antMatchers(HttpMethod.POST, "/admin/signIn").and()
         .ignoring().antMatchers(HttpMethod.POST, "/blogger/signIn").and()
         .ignoring().antMatchers(HttpMethod.POST, "/blogger/registration").and()
-                .ignoring().antMatchers("/h2-console/**");
-
+                .ignoring().antMatchers("/h2-console/**")
+                .and().ignoring().antMatchers(HttpMethod.GET, "/", "/**");
     }
 
     @Override
@@ -71,7 +71,7 @@ public class AdminConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().exceptionHandling()
                 .authenticationEntryPoint(jwtUnAuthorizedResponseAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers("/admin/**").hasAuthority("ROLE_ADMIN").anyRequest().authenticated();
+                .and().authorizeRequests().antMatchers("/admin/**").hasAuthority("ROLE_ADMIN").anyRequest().fullyAuthenticated();
         http.addFilterBefore(jwtAdminOncePerRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
